@@ -1,0 +1,80 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Вхід{% endblock %}
+
+{% block content %}
+<style>
+    .auth-card p {
+        margin-bottom: 1.25rem;
+    }
+    .auth-card label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #475569;
+        margin-bottom: 0.375rem;
+    }
+    .auth-card input[type="text"],
+    .auth-card input[type="password"],
+    .auth-card input[type="email"] {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.95rem;
+        color: var(--app-text);
+        background-color: var(--app-bg);
+        border: 1px solid var(--app-border);
+        border-radius: 0.5rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .auth-card input:focus {
+        background-color: #ffffff;
+        border-color: var(--app-accent);
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    .auth-card .helptext {
+        display: block;
+        font-size: 0.75rem;
+        color: var(--app-text-muted);
+        margin-top: 0.25rem;
+    }
+    .auth-card .errorlist {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 0.5rem 0;
+        color: #ef4444;
+        font-size: 0.85rem;
+    }
+</style>
+
+<div class="row justify-content-center align-items-center my-auto py-4">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card auth-card border-0 shadow-sm rounded-4 p-4 p-sm-5" style="background-color: var(--app-card-bg); border: 1px solid var(--app-border) !important;">
+            
+            <div class="text-center mb-4">
+                <h1 class="h3 fw-bold tracking-tight mb-2" style="color: var(--app-text);">Вхід у систему</h1>
+                <p class="text-muted small">Увійдіть до свого облікового запису</p>
+            </div>
+
+            <!-- Форма входу -->
+            <form method="post" action="{% url 'login' %}" class="mb-3">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="app-btn-primary w-100 py-2 rounded-3 fw-medium mt-2 text-center">
+                    Увійти
+                </button>
+            </form>
+
+            <!-- Перехід на реєстрацію -->
+            <div class="text-center pt-3 border-top" style="border-color: var(--app-border) !important;">
+                <span class="text-muted small me-2">Ще не маєте акаунту?</span>
+                <a href="{% url 'register' %}" class="app-btn-outline btn-sm px-3 py-1 rounded-2">
+                    Реєстрація
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

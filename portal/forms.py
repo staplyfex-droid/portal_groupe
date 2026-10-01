@@ -1,16 +1,32 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
+from .models import Accounts
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
-class UserCreationForm(forms.ModelForm):
-    password1 = forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(widget=forms.PasswordInput)
+class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
-    def clean(self):
-        cleaned = super().clean()
-        p1 = cleaned.get('password1')
-        p2 = cleaned.get('password2')
-        if p1 and p2 and p1 != p2:
-            raise ValidationError('Паролі не співпадають')
-        return cleaned
- 
+    name = forms.CharField(max_length=15, label="ім'я")
+    secondname = forms.CharField(max_length=15, label="прізвище") 
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ("username", "email")
+    def clean_email(self):
+        email = self.cleaned_data["email"].lower()
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Користувач з таким email вже існує")
+        return email
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+            Accounts.objects.create(
+                user = user,
+                name = self.cleaned_data["name"],
+                secondname = self.cleaned_data["secondname"],
+                description = "",
+            )
+        return user
+
