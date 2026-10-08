@@ -1,9 +1,11 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.forms import Select, ModelForm, NumberInput, TextInput
 from django.core.exceptions import ValidationError
-from .models import Accounts
+from .models import Accounts, Diary
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
@@ -30,3 +32,12 @@ class UserRegistrationForm(UserCreationForm):
             )
         return user
 
+class DiaryForm(ModelForm):
+    class Meta:
+        model = Diary
+        fields = ["student", "grade", "subject"]
+        widgets = {
+            'student': Select(),
+            'subject': Select(),
+            'grade': NumberInput(attrs={'placeholder': "оцінка"})
+        }

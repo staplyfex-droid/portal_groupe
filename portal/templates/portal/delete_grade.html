@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Видалення оцінки</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f7f6; color: #333; }
+        .form-container { background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); max-width: 500px; margin: 50px auto; border-top: 4px solid #c0392b; }
+        h1 { color: #c0392b; font-size: 24px; margin-top: 0; }
+        p { font-size: 16px; line-height: 1.5; color: #555; }
+        .info-box { background-color: #f9f9f9; border-left: 4px solid #7f8c8d; padding: 12px; margin: 20px 0; border-radius: 4px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 25px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500; text-decoration: none; text-align: center; }
+        .btn-danger { background-color: #c0392b; color: white; flex: 2; }
+        .btn-danger:hover { background-color: #a93226; }
+        .btn-secondary { background-color: #7f8c8d; color: white; flex: 1; }
+        .btn-secondary:hover { background-color: #95a5a6; }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>🗑️ Видалити запис?</h1>
+        <p>Ви впевнені, що хочете остаточно видалити цю оцінку з електронного щоденника? Цю дію не можна буде скасувати.</p>
+        
+        <!-- Django DeleteView автоматично передає об'єкт моделі у змінну object -->
+        <div class="info-box">
+            <strong>Учень:</strong> {{ object.student.username }}<br>
+            <strong>Оцінка / Запис:</strong> {{ object.grade }}
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="btn-group">
+                <button type="submit" class="btn btn-danger">Підтверджую видалення</button>
+                <a href="{% url 'diary:diary' %}" class="btn btn-secondary">Скасувати</a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

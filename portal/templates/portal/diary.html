@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if form.instance.pk %}
+            Редагування оцінки
+        {% else %}
+            Електронний щоденник
+        {% endif %}
+    </title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background-color: #f4f7f6; color: #333; }
+        h1, h2 { color: #2c3e50; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #34495e; color: white; }
+        tr:hover { background-color: #f5f5f5; }
+        .form-container { background: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 30px; max-width: 500px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn { padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; }
+        .btn-success { background-color: #27ae60; color: white; }
+        .btn-success:hover { background-color: #219653; }
+        .btn-secondary { background-color: #7f8c8d; color: white; margin-left: 10px; }
+        .btn-secondary:hover { background-color: #95a5a6; }
+        .btn-edit { background-color: #2980b9; color: white; padding: 5px 10px; border-radius: 3px; font-size: 14px; }
+        .btn-edit:hover { background-color: #3498db; }
+        .errorlist { color: #c0392b; list-style-type: none; padding: 0; margin: 5px 0; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <!-- РЕЖИМ 1: РЕДАГУВАННЯ ОБ'ЄКТА (GradeUpdateView) -->
+    {% if form.instance.pk %}
+        
+        <div class="form-container">
+            <h1>✏️ Редагувати запис</h1>
+            <p>Зміна даних для учня: <strong>{{ form.instance.student.username }}</strong></p>
+            
+            <form method="post" action="">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="errorlist">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <button type="submit" class="btn btn-success">Зберегти зміни</button>
+                <a href="{% url 'diary:diary' %}" class="btn btn-secondary">Скасувати</a>
+            </form>
+        </div>
+
+    <!-- РЕЖИМ 2: ПЕРЕГЛЯД ТА СТВОРЕННЯ (DiaryView) -->
+    {% else %}
+
+        <h1>📓 Електронний щоденник</h1>
+
+        <!-- Форма додавання оцінки (тільки для вчителя) -->
+        {% if has_add_mark_permission and add_mark %}
+            <div class="form-container">
+                <h2>Додати нову оцінку</h2>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="errorlist">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    {% for field in add_mark %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <ul class="errorlist">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <button type="submit" class="btn btn-success">Зберегти оцінку</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <!-- Таблиця оцінок -->
+        <h2>Список оцінок</h2>
+        {% if diary_detail %}
+            <table>
+                <thead>
+                    <tr>
+                        {% if has_add_mark_permission %}
+                            <th>Учень</th>
+                        {% endif %}
+                        <th>Предмет / Опис</th>
+                        <th>Оцінка</th>
+                        {% if has_add_mark_permission %}
+                            <th>Дії</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in diary_detail %}
+                        <tr>
+                            {% if has_add_mark_permission %}
+                                <td>{{ entry.student.username }}</td>
+                            {% endif %}
+                            <td>{{ entry.subject|default:"Запис у щоденнику" }}</td> 
+                            <td><strong>{{ entry.grade }}</strong></td>
+                            {% if has_add_mark_permission %}
+                                <td>
+                                    <!-- Кнопка переходу на GradeUpdateView -->
+                                    <!-- Замініть 'diary:update_grade' на вашу реальну назву url-шляху для редагування -->
+                                    <a href="{% url 'diary:update_grade' entry.pk %}" class="btn btn-edit">Редагувати</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Записів у щоденнику поки немає.</p>
+        {% endif %}
+
+    {% endif %}
+
+</body>
+</html>
