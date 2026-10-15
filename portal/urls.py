@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from . import views
 
@@ -9,5 +9,7 @@ urlpatterns = [
     path("", views.home, name="home"),
     path('diary', views.DiaryView.as_view(), name='diary'),
     path('edit-grade/<int:pk>/', views.GradeUpdateView.as_view(), name='edit_grade'),
-    path('delete-grade/<int:pk>/', views.GradeDeleteView.as_view(), name='delete_grade')
+    path('delete-grade/<int:pk>/', views.GradeDeleteView.as_view(), name='delete_grade'),
+    path('profile/', views.ProfileView.as_view(),name='profile'),
+    path('subject/', views.AddSubjectView.as_view(), name='subject')
 ]

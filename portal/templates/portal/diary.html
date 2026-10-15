@@ -33,16 +33,16 @@
 </head>
 <body>
 
-    <!-- РЕЖИМ 1: РЕДАГУВАННЯ ОБ'ЄКТА (GradeUpdateView) -->
+    <!-- РЕЖИМ 1: РЕДАГУВАННЯ ОЦІНКИ (GradeUpdateView) -->
     {% if form.instance.pk %}
-        
+
         <div class="form-container">
             <h1>✏️ Редагувати запис</h1>
-            <p>Зміна даних для учня: <strong>{{ form.instance.student.username }}</strong></p>
-            
+            <p>Зміна даних для учня: <strong>{{ form.instance.student.name }} {{ form.instance.student.secondname }}</strong></p>
+
             <form method="post" action="">
                 {% csrf_token %}
-                
+
                 {% if form.non_field_errors %}
                     <div class="errorlist">{{ form.non_field_errors }}</div>
                 {% endif %}
@@ -60,9 +60,9 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-                
+
                 <button type="submit" class="btn btn-success">Зберегти зміни</button>
-                <a href="{% url 'diary:diary' %}" class="btn btn-secondary">Скасувати</a>
+                <a href="{% url 'diary' %}" class="btn btn-secondary">Скасувати</a>
             </form>
         </div>
 
@@ -77,9 +77,9 @@
                 <h2>Додати нову оцінку</h2>
                 <form method="post" action="">
                     {% csrf_token %}
-                    
-                    {% if form.non_field_errors %}
-                        <div class="errorlist">{{ form.non_field_errors }}</div>
+
+                    {% if add_mark.non_field_errors %}
+                        <div class="errorlist">{{ add_mark.non_field_errors }}</div>
                     {% endif %}
 
                     {% for field in add_mark %}
@@ -95,7 +95,7 @@
                             {% endif %}
                         </div>
                     {% endfor %}
-                    
+
                     <button type="submit" class="btn btn-success">Зберегти оцінку</button>
                 </form>
             </div>
@@ -110,7 +110,7 @@
                         {% if has_add_mark_permission %}
                             <th>Учень</th>
                         {% endif %}
-                        <th>Предмет / Опис</th>
+                        <th>Предмет</th>
                         <th>Оцінка</th>
                         {% if has_add_mark_permission %}
                             <th>Дії</th>
@@ -121,15 +121,13 @@
                     {% for entry in diary_detail %}
                         <tr>
                             {% if has_add_mark_permission %}
-                                <td>{{ entry.student.username }}</td>
+                                <td>{{ entry.student.name }} {{ entry.student.secondname }}</td>
                             {% endif %}
-                            <td>{{ entry.subject|default:"Запис у щоденнику" }}</td> 
+                            <td>{{ entry.subject.name|default:"—" }}</td>
                             <td><strong>{{ entry.grade }}</strong></td>
                             {% if has_add_mark_permission %}
                                 <td>
-                                    <!-- Кнопка переходу на GradeUpdateView -->
-                                    <!-- Замініть 'diary:update_grade' на вашу реальну назву url-шляху для редагування -->
-                                    <a href="{% url 'diary:update_grade' entry.pk %}" class="btn btn-edit">Редагувати</a>
+                                    <a href="{% url 'edit_grade' entry.pk %}" class="btn btn-edit">Редагувати</a>
                                 </td>
                             {% endif %}
                         </tr>

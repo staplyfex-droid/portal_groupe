@@ -1,0 +1,116 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Додати предмет{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center my-auto py-4">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-4 p-sm-5" style="background-color: var(--app-card-bg); border: 1px solid var(--app-border) !important;">
+            
+            <style>
+                h1 {
+                    font-size: 1.75rem;
+                    font-weight: 600;
+                    color: #2c3e50;
+                    margin-bottom: 20px;
+                }
+                .form-group {
+                    margin-bottom: 15px;
+                    text-align: left;
+                }
+                .form-group label {
+                    display: block;
+                    margin-bottom: 5px;
+                    font-weight: 600;
+                    color: #475569;
+                }
+                .form-group input, 
+                .form-group select, 
+                .form-group textarea {
+                    width: 100%;
+                    padding: 10px;
+                    border: 1px solid #cbd5e1;
+                    border-radius: 8px;
+                    box-sizing: border-box;
+                    font-size: 1rem;
+                    background-color: #fff;
+                }
+                .form-group input:focus, 
+                .form-group select:focus, 
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: #2563eb;
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+                }
+                .btn-success-custom {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #27ae60;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    transition: background-color 0.2s;
+                }
+                .btn-success-custom:hover {
+                    background-color: #219653;
+                }
+                .btn-secondary-custom {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #64748b;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    margin-left: 10px;
+                    transition: background-color 0.2s;
+                }
+                .btn-secondary-custom:hover {
+                    background-color: #475569;
+                }
+                .errorlist {
+                    color: #c0392b;
+                    list-style-type: none;
+                    padding: 0;
+                    margin: 5px 0;
+                    font-size: 0.85rem;
+                }
+            </style>
+
+            <h1>📚 Додати новий предмет</h1>
+
+            <form method="post" action="">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="errorlist">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <div class="mt-4 text-start">
+                    <button type="submit" class="btn-success-custom">Зберегти предмет</button>
+                    <a href="/diary" class="btn-secondary-custom">Скасувати</a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

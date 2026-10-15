@@ -12,7 +12,6 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Головна сторінка</title>
                 <style>
-                    /* Скидання базових відступів та вирівнювання по центру */
                     * {
                         box-sizing: border-box;
                         margin: 0;
@@ -30,17 +29,61 @@
                         text-align: center;
                     }
 
-                    /* Стилізація головного надпису */
                     h1 {
                         font-size: clamp(2rem, 5vw, 3.5rem);
                         font-weight: 600;
                         letter-spacing: -0.02em;
+                        margin-bottom: 25px;
+                    }
+
+                    .btn-group-custom {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                        align-items: center;
+                    }
+
+                    .btn-diary {
+                        display: inline-block;
+                        padding: 12px 24px;
+                        background-color: #2563eb;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        transition: background-color 0.2s;
+                        width: 100%;
+                        max-width: 260px;
+                    }
+                    .btn-diary:hover {
+                        background-color: #1d4ed8;
+                    }
+
+                    .btn-profile {
+                        display: inline-block;
+                        padding: 12px 24px;
+                        background-color: #475569;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        transition: background-color 0.2s;
+                        width: 100%;
+                        max-width: 260px;
+                    }
+                    .btn-profile:hover {
+                        background-color: #334155;
                     }
                 </style>
             </head>
             <body>
 
                 <h1>Головна сторінка</h1>
+
+                <div class="btn-group-custom">
+                    <a href="/diary" class="btn-diary">📓 Перейти до щоденника</a>
+                    <a href="/profile" class="btn-profile">👤 Мій профіль</a>
+                </div>
 
             </body>
 
